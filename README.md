@@ -1,4 +1,7 @@
 # PageRank Web Crawler & Visualization
+![PageRank Visualization](assets/graph-preview.png)
+
+![MIT License](https://img.shields.io/badge/license-MIT-green)
 
 This project is a **Python-based simulation of a search engine ranking system** inspired by Google’s original **PageRank algorithm**.
 
@@ -10,106 +13,117 @@ This is an **educational project** focused on understanding how search engines w
 
 ## 📌 What This Project Does
 
-1. Crawls web pages starting from a seed URL  
-2. Extracts and stores links between pages  
-3. Builds a directed graph of the website  
-4. Computes PageRank scores iteratively  
-5. Visualizes the web graph using a force-directed layout  
+- Crawls web pages starting from a seed URL  
+- Extracts and stores links between pages  
+- Builds a directed graph of the website  
+- Computes PageRank scores iteratively  
+- Visualizes the web graph using D3.js  
 
 ---
 
 ## 🛠️ Technologies Used
 
-- **Python**
-- **SQLite** (database storage)
-- **BeautifulSoup** (HTML parsing)
-- **urllib** (HTTP requests)
-- **D3.js** (graph visualization)
-- **HTML / JavaScript**
+- Python  
+- SQLite  
+- BeautifulSoup  
+- urllib  
+- D3.js  
+- HTML / JavaScript  
 
 ---
 
 ## 📂 Project Structure
-<img width="577" height="235" alt="image" src="https://github.com/user-attachments/assets/c61fac47-d004-46b6-92a5-6fb2c03997bd" />
 
+```
+pagerank-web-crawler/
+├── spider.py        # Web crawler
+├── sprank.py        # PageRank algorithm
+├── spdump.py        # Link inspection tool
+├── spjson.py        # Graph data generator
+├── force.html       # Visualization (D3.js)
+├── spider.js        # Generated graph data
+├── .gitignore
+└── README.md
+```
 
-## ▶️ How to Run the Project
+---
 
-### 1️⃣ Install dependency
+## ✅ Prerequisites
+
+- Python 3.7 or later
+- Install dependency:
+
 ```bash
 pip install beautifulsoup4
 
 
 ⸻
 
-2️⃣ Run the web crawler
+▶️ How to Run
+
+1️⃣ Crawl the website
 
 python spider.py
 
 	•	Enter a starting URL when prompted
-	•	Crawling is intentionally limited to a single domain
+	•	Crawling is limited to one domain for ethical reasons
 
 ⸻
 
-3️⃣ Compute PageRank
+2️⃣ Compute PageRank
 
 python sprank.py
 
-	•	Enter number of iterations (e.g., 10)
+	•	Enter number of iterations (e.g. 10)
 
 ⸻
 
-4️⃣ Generate visualization data
+3️⃣ Generate visualization data
 
 python spjson.py
 
-	•	Enter number of nodes to visualize (e.g., 20)
+	•	Enter number of nodes (e.g. 20)
 
 ⸻
 
-5️⃣ View the graph
+4️⃣ View the visualization
 
-python -m http.server 8000
+python -m http.server
 
 Open in browser:
 
 http://localhost:8000/force.html
-```
-<img width="1366" height="768" alt="Force html_graph" src="https://github.com/user-attachments/assets/744335f4-eafb-40b1-b2a3-39b6e1fa7d9b" />
 
 
-
-```bash
 ⸻
 
-📊 Visualization
+📊 Visualization Details
 	•	Node size represents PageRank importance
-	•	Links represent page connections
-	•	Nodes are draggable for interaction
+	•	Edges represent page links
+	•	Nodes can be dragged interactively
 
 ⸻
 
 📘 What I Learned
-	•	How web crawlers collect and structure data
+	•	How web crawlers work internally
 	•	How PageRank distributes importance across links
 	•	How iterative algorithms converge
-	•	How graph theory applies to real-world systems
-	•	How backend data can be visualized interactively
+	•	Practical use of graph theory
+	•	Connecting backend data with frontend visualization
 
 ⸻
 
 ⚠️ Notes
-	•	Crawling is ethical and domain-restricted
+	•	Crawling is domain-restricted by design
 	•	Visualization performance depends on node count
 	•	This is not a production search engine
-	•	Built for learning and experimentation
 
 ⸻
 
 🙏 Acknowledgment
 
-Inspired by the Python for Everybody course by
-Dr. Charles R. Severance (Coursera)
+Inspired by the Python for Everybody course
+by Dr. Charles R. Severance (Coursera)
 
 ⸻
 
@@ -118,7 +132,5 @@ Dr. Charles R. Severance (Coursera)
 Gurlal Singh
 Computer Science Student
 Python | Data Structures | Algorithms
-
-⸻
 
 ⭐ If you find this project useful, feel free to star the repository.
