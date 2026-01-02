@@ -11,5 +11,5 @@ ORDER BY inbound DESC
 LIMIT 20
 ''')
 
-for inbound, url in cur:
-    print(inbound, url)
+for row in cur:
+    print(row[1], row[0])
