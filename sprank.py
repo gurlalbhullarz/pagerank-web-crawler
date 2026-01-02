@@ -4,63 +4,70 @@ sprank.py
 Computes PageRank values for crawled pages
 using an iterative graph-based algorithm.
 """
-
 import sqlite3
-
 conn = sqlite3.connect('spider.sqlite')
 cur = conn.cursor()
 
-cur.execute('SELECT DISTINCT from_id FROM Links')
-from_ids = [row[0] for row in cur]
-
-if not from_ids:
-    print('No links found')
+cur.execute("SELECT DISTINCT from_id FROM Links")
+from_ids = list()
+for row in cur:
+    from_ids.append(row[0])
+if len(from_ids) < 1:
+    print("No links Found")
     quit()
 
-links = []
+links = list()
 cur.execute('SELECT DISTINCT from_id, to_id FROM Links')
-for from_id, to_id in cur:
+for row in cur:
+    from_id = row[0]
+    to_id = row[1]
     if from_id == to_id:
         continue
-    if from_id not in from_ids or to_id not in from_ids:
+    if from_id not in from_ids:
         continue
-    links.append((from_id, to_id))
-
-prev_ranks = {}
+    if to_id not in from_ids:
+        continue
+    links.append((from_id,to_id))
+prev_ranks = dict()
 cur.execute('SELECT id, old_rank FROM Pages')
-for id, rank in cur:
-    prev_ranks[id] = rank
+for row in cur:
+    prev_ranks[row[0]] = row [1]
+many = input("How many iterations:")
+if many.isdigit():
+    many = int(many)
+else:
+    many = 1
 
-iterations = input('How many iterations: ')
-iterations = int(iterations) if iterations.isdigit() else 1
-
-for i in range(iterations):
+for i in range(many):
     print(f'Iteration {i + 1}')
-
-    next_ranks = {node: 0.0 for node in prev_ranks}
-    total = sum(prev_ranks.values())
-
-    for node, old_rank in prev_ranks.items():
-        targets = [to_id for from_id, to_id in links if from_id == node]
-        if not targets:
+    next_ranks = dict()
+    total = 0.0
+    for node in prev_ranks:
+        total+= prev_ranks[node]
+        next_ranks[node] = 0.0
+    for node in prev_ranks:
+        old_rank = prev_ranks[node]
+        give_ids = list()
+        for link in links:
+            if link[0] == node:
+                give_ids.append(link[1])
+        if len(give_ids) < 1:
             continue
-
-        share = old_rank / len(targets)
-        for target in targets:
-            next_ranks[target] += share
-
-    evap = (total - sum(next_ranks.values())) / len(next_ranks)
+        amount = old_rank / len(give_ids)
+        for id in give_ids:
+            next_ranks[id] += amount
+    evap = (total - sum(next_ranks.values()))/len(next_ranks)
     for node in next_ranks:
         next_ranks[node] += evap
-
-    diff = sum(abs(prev_ranks[n] - next_ranks[n]) for n in prev_ranks)
+    diff = 0
+    for node in prev_ranks:
+        diff += abs(prev_ranks[node] - next_ranks[node])
     print('Average change:', diff / len(prev_ranks))
-
     prev_ranks = next_ranks
-
-for node, rank in prev_ranks.items():
-    cur.execute('UPDATE Pages SET new_rank=? WHERE id=?', (rank, node))
-
-cur.execute('UPDATE Pages SET old_rank=new_rank')
+for node in prev_ranks:
+    cur.execute(
+            'UPDATE Pages SET new_rank=? WHERE id=?',
+            (prev_ranks[node], node)
+            )
+cur.execute('UPDATE Pages SET old_rank = new_rank')
 conn.commit()
-print('PageRank computation complete')
